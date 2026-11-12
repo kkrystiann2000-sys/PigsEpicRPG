@@ -1,0 +1,2153 @@
+/* ============================================================
+   Piggy Epic — Egg World
+   ============================================================ */
+
+:root {
+  --green: #7cc33f;
+  --green-light: #a8dd63;
+  --green-dark: #3f6b1e;
+  --green-deep: #1d3316;
+  --cream: #fdf3d8;
+  --gold: #f7c948;
+  --gold-dark: #b98a16;
+  --wood: #8a5a2b;
+  --ink: #20301a;
+  --danger: #e2543f;
+  --sky-top: #9adcf5;
+  --sky-bottom: #d9f2cf;
+  --panel: rgba(16, 32, 18, 0.82);
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden;
+  background: #10200f;
+  color: var(--cream);
+  font-family: "Baloo 2", "Trebuchet MS", "Segoe UI", system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+
+#app {
+  height: 100dvh;
+  display: flex;
+  justify-content: center;
+}
+
+.screen {
+  width: 100%;
+  max-width: 1080px;
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+}
+
+.hidden { display: none !important; }
+
+button { font-family: inherit; }
+
+/* ------------------------------------------------------------
+   Chunky buttons
+   ------------------------------------------------------------ */
+.btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px;
+  border: 0;
+  border-radius: 18px;
+  padding: 13px 26px;
+  font-family: inherit;
+  font-size: 1.05rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  color: #1b3208;
+  background: linear-gradient(#a8e05f, #6db52f);
+  box-shadow: 0 6px 0 #3d6b1b, 0 12px 20px rgba(0, 0, 0, 0.35);
+  cursor: pointer;
+  transition: transform 0.08s ease, box-shadow 0.08s ease, filter 0.15s;
+  vertical-align: middle;
+}
+.btn:hover { filter: brightness(1.06); }
+.btn:active { transform: translateY(4px); box-shadow: 0 2px 0 #3d6b1b, 0 6px 12px rgba(0,0,0,.35); }
+.btn.ghost {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--cream);
+  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.28);
+}
+.btn.ghost:active { transform: translateY(2px); box-shadow: inset 0 0 0 2px rgba(255,255,255,.28); }
+.btn.gold {
+  color: #4a2f00;
+  background: linear-gradient(#ffe17a, #f5b921);
+  box-shadow: 0 6px 0 #a97713, 0 12px 20px rgba(0, 0, 0, 0.35);
+}
+.btn:disabled { filter: grayscale(0.7) brightness(0.65); cursor: not-allowed; }
+.btn.small { padding: 8px 14px; font-size: 0.9rem; border-radius: 13px; box-shadow: 0 4px 0 #3d6b1b; }
+.btn.small.ghost { box-shadow: inset 0 0 0 2px rgba(255,255,255,.25); }
+
+.icon-btn {
+  position: relative;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 0;
+  display: grid;
+  place-items: center;
+  font-size: 1.1rem;
+  background: rgba(9, 20, 8, 0.45);
+  color: var(--cream);
+  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.18);
+  cursor: pointer;
+  transition: background 0.15s;
+  flex-shrink: 0;
+}
+.icon-btn:hover { background: rgba(9, 20, 8, 0.7); }
+
+/* ------------------------------------------------------------
+   Title screen
+   ------------------------------------------------------------ */
+#screen-title {
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background:
+    radial-gradient(1200px 600px at 50% 110%, #4c8b2c 0%, transparent 60%),
+    radial-gradient(700px 420px at 15% 10%, #3f7a35 0%, transparent 70%),
+    linear-gradient(#1b3a22, #0c1a10 70%);
+  padding: 12px;
+}
+#screen-title::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(circle at 12% 22%, rgba(255, 255, 255, 0.16) 0 2px, transparent 2px),
+    radial-gradient(circle at 78% 16%, rgba(255, 255, 255, 0.12) 0 2px, transparent 2px),
+    radial-gradient(circle at 62% 72%, rgba(255, 255, 255, 0.08) 0 2px, transparent 2px),
+    radial-gradient(circle at 30% 88%, rgba(255, 255, 255, 0.1) 0 2px, transparent 2px);
+  background-size: 240px 240px, 300px 300px, 260px 260px, 340px 340px;
+  opacity: 0.8;
+  pointer-events: none;
+}
+.title-inner { position: relative; z-index: 2; display: flex; flex-direction: column; align-items: center; gap: 10px; }
+.title-kicker {
+  font-size: 0.8rem;
+  letter-spacing: 0.42em;
+  text-transform: uppercase;
+  color: #ffe9a8;
+  opacity: 0.85;
+  font-weight: 700;
+}
+.logo {
+  font-size: clamp(2.9rem, 9vw, 5.4rem);
+  line-height: 0.86;
+  font-weight: 800;
+  letter-spacing: 0.01em;
+  color: #ffe9a8;
+  text-shadow:
+    0 4px 0 #b07a13,
+    0 9px 0 #6d4a09,
+    0 14px 26px rgba(0, 0, 0, 0.55);
+  transform: rotate(-2deg);
+  margin: 4px 0 0;
+}
+.logo span { display: block; color: #b7e96b; text-shadow: 0 4px 0 #4a7a1e, 0 9px 0 #2c4d10, 0 14px 26px rgba(0,0,0,.5); }
+.logo-sub {
+  font-size: clamp(1rem, 3.6vw, 1.4rem);
+  font-weight: 700;
+  color: #d6f0b4;
+  letter-spacing: 0.06em;
+  opacity: 0.9;
+}
+.title-heroes {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: clamp(2px, 2vw, 18px);
+  margin: 14px 0 4px;
+  filter: drop-shadow(0 14px 14px rgba(0, 0, 0, 0.45));
+}
+.title-heroes .art { width: clamp(74px, 19vw, 132px); height: clamp(74px, 19vw, 132px); }
+.title-heroes > *:nth-child(1) { transform: rotate(-7deg) translateY(4px); animation: bob 3.1s ease-in-out infinite; }
+.title-heroes > *:nth-child(2) { transform: rotate(3deg) scale(1.14); animation: bob 2.6s ease-in-out infinite 0.3s; }
+.title-heroes > *:nth-child(3) { transform: rotate(8deg) translateY(6px); animation: bob 3.4s ease-in-out infinite 0.6s; }
+@keyframes bob {
+  0%, 100% { translate: 0 0; }
+  50% { translate: 0 -7px; }
+}
+.title-actions { display: flex; gap: 12px; align-items: center; margin-top: 18px; flex-wrap: wrap; justify-content: center; }
+.title-foot {
+  margin-top: 22px;
+  font-size: 0.82rem;
+  color: #cfe4b6;
+  opacity: 0.6;
+  line-height: 1.5;
+  max-width: 420px;
+}
+.title-stars { font-size: 0.9rem; color: #ffe9a8; opacity: 0.85; font-weight: 700; }
+
+/* ------------------------------------------------------------
+   Map screen
+   ------------------------------------------------------------ */
+#screen-map { background: radial-gradient(circle at 50% 0%, #2b4f25, #0e1c10 75%); }
+.map-top {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px 10px;
+  background: linear-gradient(rgba(8, 18, 8, 0.92), rgba(8, 18, 8, 0.55));
+  backdrop-filter: blur(6px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  z-index: 3;
+  flex-wrap: wrap;
+}
+.map-top .world {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-right: auto;
+}
+.map-top .world h1 {
+  font-size: 1.25rem;
+  margin: 0;
+  line-height: 1.05;
+  color: #ffeab3;
+  letter-spacing: 0.01em;
+}
+.map-top .world p { margin: 0; font-size: 0.74rem; letter-spacing: 0.18em; text-transform: uppercase; color: #a9c98d; }
+.world-badge {
+  width: 44px; height: 52px;
+  display: grid; place-items: center;
+  border-radius: 50% 50% 46% 46% / 42% 42% 58% 58%;
+  background: linear-gradient(#fdf6e0, #e3cf9c);
+  color: #7d5c17;
+  font-weight: 800;
+  font-size: 0.95rem;
+  box-shadow: inset 0 -4px 0 rgba(0,0,0,.12), 0 3px 0 rgba(0,0,0,.3);
+}
+.party {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 16px;
+  padding: 5px 12px 5px 6px;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.09);
+}
+.party .art { width: 38px; height: 38px; filter: drop-shadow(0 2px 2px rgba(0,0,0,.4)); }
+.party .lvl { font-size: 0.78rem; line-height: 1.1; color: #c9e3ac; font-weight: 700; }
+.party .lvl b { display: block; font-size: 0.98rem; color: #ffe9a8; }
+.xp-bar {
+  width: 64px; height: 7px; border-radius: 6px; overflow: hidden;
+  background: rgba(0,0,0,.5); box-shadow: inset 0 0 0 1px rgba(255,255,255,.12);
+  margin-top: 3px;
+}
+.xp-bar i { display: block; height: 100%; width: 0; background: linear-gradient(90deg, #ffe17a, #f5b921); transition: width .4s; }
+
+.map-scroll {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: #4f7a2f transparent;
+  padding: 0 8px 40px;
+}
+.map-scene { display: block; width: 100%; max-width: 620px; margin: 0 auto; height: auto; }
+
+.map-node { cursor: pointer; }
+.map-node .egg-body { filter: drop-shadow(0 5px 0 rgba(0,0,0,.28)); transition: filter .16s ease; }
+/* NOTE: hover must never move/resize the tile. A translate here made the
+   cursor leave the shape on the way up, un-hover, snap back, and loop —
+   that was the "tile keeps blinking" bug. Glow only. */
+.map-node:hover .egg-body { filter: drop-shadow(0 5px 0 rgba(0,0,0,.28)) drop-shadow(0 0 10px rgba(255, 246, 190, .95)) brightness(1.05); }
+.map-node .node-hit { pointer-events: all; }
+.map-node .node-label { font-family: inherit; font-weight: 800; fill: #4b3510; font-size: 22px; text-anchor: middle; pointer-events: none; }
+.map-node.locked { cursor: not-allowed; }
+.map-node.locked .egg-body { filter: none; opacity: 0.55; }
+.map-node.cleared .egg-body { filter: drop-shadow(0 5px 0 rgba(0,0,0,.3)) drop-shadow(0 0 12px rgba(255, 220, 120, .35)); }
+.map-node.current .egg-body { animation: nodePulse 1.8s ease-in-out infinite; }
+@keyframes nodePulse {
+  0%, 100% { filter: drop-shadow(0 5px 0 rgba(0,0,0,.3)) drop-shadow(0 0 0 rgba(255,230,120,.0)); }
+  50% { filter: drop-shadow(0 5px 0 rgba(0,0,0,.3)) drop-shadow(0 0 16px rgba(255,230,120,.95)); }
+}
+.map-node .star { color: #ffd85e; font-size: 15px; }
+.map-tip {
+  text-align: center;
+  font-size: 0.82rem;
+  color: #9fbe86;
+  padding: 0 20px 14px;
+}
+
+/* ------------------------------------------------------------
+   Battle screen
+   ------------------------------------------------------------ */
+#screen-battle { background: #10200f; }
+.battle-top {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  background: rgba(10, 22, 10, 0.92);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  z-index: 5;
+}
+.battle-top .lv-title { display: flex; flex-direction: column; margin-right: auto; min-width: 0; }
+.battle-top .lv-title b {
+  font-size: 1rem; color: #ffe9a8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.battle-top .lv-title span { font-size: 0.68rem; letter-spacing: 0.2em; text-transform: uppercase; color: #a9c98d; }
+.round-chip {
+  font-size: 0.72rem; font-weight: 800; letter-spacing: 0.08em;
+  background: rgba(255, 255, 255, 0.09); border-radius: 10px; padding: 5px 10px; color: #d9edc2;
+  white-space: nowrap;
+}
+
+/* How many waves this fight has, and how far through them you are. */
+.wave-track {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.09);
+  border-radius: 10px;
+  padding: 4px 8px;
+  color: #d9edc2;
+  font-size: 0.66rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+}
+.wave-pips { display: flex; gap: 3px; }
+.wave-pip {
+  width: 16px; height: 16px;
+  display: grid; place-items: center;
+  border-radius: 5px;
+  font-style: normal;
+  font-size: 0.6rem;
+  background: rgba(0, 0, 0, 0.38);
+  color: rgba(255, 255, 255, 0.5);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.18);
+}
+.wave-pip.done { background: linear-gradient(#9be25c, #5cae2c); color: #14300a; }
+.wave-pip.on {
+  background: linear-gradient(#ffd76a, #f0a83a);
+  color: #3a2405;
+  box-shadow: 0 0 8px rgba(255, 200, 90, 0.85);
+  animation: wavePipPulse 1.4s ease-in-out infinite;
+}
+@keyframes wavePipPulse { 50% { transform: translateY(-1px) scale(1.06); } }
+@media (max-width: 520px) {
+  .wave-track .wave-label { display: none; }
+  .wave-pip { width: 13px; height: 13px; font-size: 0.52rem; }
+}
+
+.stage {
+  position: relative;
+  flex: 1;
+  min-height: 300px;
+  overflow: hidden;
+  background:
+    radial-gradient(120% 70% at 50% 100%, #7fb64a 0%, transparent 55%),
+    linear-gradient(#a5e0f7 0%, #c8eef6 42%, #e0f3cd 58%, #8fc457 59%, #5f9a33 100%);
+  isolation: isolate;
+}
+.stage::before {
+  content: "";
+  position: absolute;
+  left: -10%; right: -10%; bottom: 40%; height: 32%;
+  background:
+    radial-gradient(60% 100% at 15% 100%, #7cb84f 0 60%, transparent 61%),
+    radial-gradient(70% 100% at 55% 100%, #6faa45 0 60%, transparent 61%),
+    radial-gradient(50% 100% at 92% 100%, #86c258 0 60%, transparent 61%);
+  opacity: 0.9;
+  z-index: 0;
+}
+.stage::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0 0;
+  /* A deep band of ground: two ranks of fighters both stand on it instead of
+     the back row floating up in the sky. */
+  height: 46%;
+  background: linear-gradient(#6aa93c, #4a7c26);
+  box-shadow: inset 0 6px 0 rgba(255, 255, 255, 0.18);
+  z-index: 0;
+}
+/* ------------------------------------------------------------
+   Per-world battle backdrops
+   Battle.start() tags the stage with world-1 / world-2 / world-3, so every
+   world fights in its own sky. The meadow look lives on the base .stage rule.
+   ------------------------------------------------------------ */
+.stage.world-2 {
+  background:
+    radial-gradient(120% 70% at 50% 100%, #d98b4a 0%, transparent 55%),
+    linear-gradient(#ffc98a 0%, #ffe1b4 40%, #f7d8a4 56%, #e2a468 57%, #bf7a40 100%);
+}
+.stage.world-2::before {
+  background:
+    radial-gradient(60% 100% at 12% 100%, #c9793f 0 60%, transparent 61%),
+    radial-gradient(70% 100% at 52% 100%, #b96d38 0 60%, transparent 61%),
+    radial-gradient(50% 100% at 90% 100%, #d38a4c 0 60%, transparent 61%);
+  opacity: 0.92;
+}
+.stage.world-2::after {
+  background: linear-gradient(#d99a5d, #a8622f);
+  box-shadow: inset 0 6px 0 rgba(255, 236, 205, 0.3);
+}
+.stage.world-2 .cloud { background: rgba(255, 228, 194, 0.78); }
+
+.stage.world-3 {
+  background:
+    radial-gradient(120% 70% at 50% 100%, #cfe6f5 0%, transparent 55%),
+    linear-gradient(#9dc6e8 0%, #cfe6f5 40%, #eaf6ff 56%, #dcecf8 57%, #a7c7de 100%);
+}
+.stage.world-3::before {
+  background:
+    radial-gradient(60% 100% at 14% 100%, #eaf5fd 0 60%, transparent 61%),
+    radial-gradient(70% 100% at 54% 100%, #d6e8f6 0 60%, transparent 61%),
+    radial-gradient(50% 100% at 92% 100%, #f2f9ff 0 60%, transparent 61%);
+  opacity: 0.96;
+}
+.stage.world-3::after {
+  background: linear-gradient(#e8f3fb, #b5d0e4);
+  box-shadow: inset 0 6px 0 rgba(255, 255, 255, 0.55);
+}
+.stage.world-3 .cloud { background: rgba(255, 255, 255, 0.95); }
+
+/* World 4: surf, wet sand and a glaring sky. The sea is a thin band on the
+   horizon only — the ground the pigs stand on is dry sand, never water. */
+.stage.world-4 {
+  background:
+    radial-gradient(120% 70% at 50% 100%, #f0dfae 0%, transparent 55%),
+    linear-gradient(#8fd8e8 0%, #cdeef2 22%, #6cc3d3 29%, #3f9cb4 34%, #f2e2ae 35%, #e6cf98 60%, #d9bf83 100%);
+}
+.stage.world-4::before {
+  background:
+    radial-gradient(60% 100% at 14% 100%, #e8d49a 0 60%, transparent 61%),
+    radial-gradient(70% 100% at 54% 100%, #dfc98c 0 60%, transparent 61%),
+    radial-gradient(50% 100% at 92% 100%, #f0dfae 0 60%, transparent 61%);
+  opacity: 0.95;
+}
+.stage.world-4::after {
+  background: linear-gradient(#f2e2ae, #cfb173);
+  box-shadow: inset 0 6px 0 rgba(255, 255, 255, 0.55);
+}
+.stage.world-4 .cloud { background: rgba(255, 255, 255, 0.92); }
+.cloud {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: 999px;
+  height: 20px;
+  filter: blur(0.4px);
+  opacity: 0.9;
+  z-index: 0;
+  animation: drift linear infinite;
+}
+.cloud::before, .cloud::after {
+  content: ""; position: absolute; background: inherit; border-radius: 999px;
+}
+.cloud::before { width: 60%; height: 170%; left: 12%; top: -80%; }
+.cloud::after { width: 45%; height: 140%; right: 10%; top: -55%; }
+@keyframes drift {
+  from { transform: translateX(-25vw); }
+  to { transform: translateX(115vw); }
+}
+
+.sides {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  padding: 0 clamp(4px, 2.4vw, 34px) clamp(4px, 1.6vh, 18px);
+  z-index: 2;
+  gap: 4px;
+}
+.side { display: flex; align-items: flex-end; gap: clamp(2px, 1vw, 14px); }
+.side.enemies { justify-content: flex-end; flex-wrap: wrap; row-gap: 6px; max-width: 66%; }
+.side.heroes {
+  max-width: 46%;
+  flex-wrap: nowrap;
+  /* The turn ring and the focus ring are painted outside each pig's box, so
+     the squad keeps enough air between figures that neighbouring rings never
+     touch. */
+  /* Tied to the pig's own width: the ring reaches 12% past the box on each
+     side and pulses 6% larger, so the gap has to clear both neighbours. */
+  column-gap: calc(clamp(52px, 10vw, 96px) * 0.42);
+}
+/* Four or more figures form two ranks: grid auto-flow down two rows and then
+   across, so a full squad reads as a front line plus a back row. */
+.side.two-row {
+  display: grid;
+  grid-auto-flow: column;
+  grid-template-rows: repeat(2, auto);
+  align-items: end;
+  flex-wrap: nowrap;
+}
+/* The one-off stagger (nth-child margins) would leave a ragged third baseline
+   in a two-rank grid, so it is cancelled for both sides. */
+.side.two-row > .fig.hero,
+.side.two-row > .fig.enemy { margin-bottom: 0; }
+.side.heroes.two-row { justify-content: start; }
+.side.enemies.two-row { justify-content: end; }
+
+.fig {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  transition: transform 0.25s cubic-bezier(.2,.9,.3,1.4), filter .3s, opacity .35s;
+  width: clamp(52px, 10vw, 96px);
+  flex: 0 0 auto;
+  min-width: 0;
+}
+.fig.hero:nth-child(2) { margin-bottom: 9px; }
+.fig.enemy:nth-child(2n) { margin-bottom: 11px; }
+.fig .art { width: 100%; height: auto; filter: drop-shadow(0 6px 4px rgba(0, 0, 0, 0.28)); transition: transform .2s; }
+.fig.enemy { width: clamp(58px, 12.5vw, 118px); cursor: default; }
+.fig.enemy.boss { width: clamp(88px, 19vw, 178px); z-index: 3; }
+.fig.enemy.boss .art { filter: drop-shadow(0 10px 8px rgba(0, 0, 0, 0.4)); }
+.fig.enemy.boss .nameplate { font-size: clamp(0.62rem, 1.5vw, 0.8rem); }
+/* Up to eight birds can share the field: a crowded side shrinks to fit rather
+   than pushing the squad off the stage. */
+.side.enemies.dense { max-width: 74%; }
+.side.enemies.dense .fig.enemy { width: clamp(42px, 8vw, 82px); }
+.side.enemies.dense .fig .nameplate { font-size: clamp(0.45rem, 1vw, 0.62rem); }
+/* A boss that calls reinforcements must not be shrunk with the crowd: it keeps
+   its size (a little tighter) however many birds answer the call. */
+.side.enemies.dense .fig.enemy.boss { width: clamp(84px, 16vw, 150px); }
+.side.enemies.dense .fig.enemy.boss .nameplate { font-size: clamp(0.58rem, 1.3vw, 0.74rem); }
+.fig.enemy.targetable { cursor: crosshair; }
+.fig.enemy.targetable .art { animation: targetGlow 1.1s ease-in-out infinite; }
+@keyframes targetGlow {
+  0%, 100% { filter: drop-shadow(0 6px 4px rgba(0,0,0,.28)) drop-shadow(0 0 0 rgba(255, 80, 60, 0)); }
+  50% { filter: drop-shadow(0 6px 4px rgba(0,0,0,.28)) drop-shadow(0 0 12px rgba(255, 90, 60, 0.95)); }
+}
+.fig .nameplate {
+  font-size: clamp(0.55rem, 1.2vw, 0.72rem);
+  font-weight: 700;
+  color: #20301a;
+  background: rgba(253, 243, 216, 0.85);
+  border-radius: 8px;
+  padding: 0 6px;
+  line-height: 1.35;
+  white-space: nowrap;
+  min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  box-shadow: 0 1px 0 rgba(0, 0, 0, .15);
+}
+.hp-track {
+  width: 100%;
+  height: 7px;
+  background: rgba(20, 30, 15, 0.55);
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.2);
+}
+.hp-track i {
+  display: block;
+  height: 100%;
+  width: 100%;
+  background: linear-gradient(90deg, #9be25c, #5cae2c);
+  transition: width 0.4s ease, background 0.3s;
+  border-radius: 6px;
+}
+.hp-track.low i { background: linear-gradient(90deg, #ff9a6a, #d8452f); }
+
+/* Shield hit points, right under the health bar. Hidden at zero. */
+.shield-num {
+  width: 100%;
+  margin-top: 1px;
+  text-align: center;
+  font-size: clamp(0.44rem, 1vw, 0.6rem);
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  font-variant-numeric: tabular-nums;
+  color: #bfe9ff;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+  pointer-events: none;
+}
+.shield-num.hidden { display: none; }
+
+.fig.hero .turn-ring {
+  position: absolute;
+  inset: -8% -12% 10%;
+  border-radius: 50%;
+  border: 3px dashed rgba(255, 235, 150, 0.9);
+  opacity: 0;
+  transition: opacity .2s;
+  pointer-events: none;
+}
+/* The ring turns once as a pig's turn starts, then holds still. */
+.fig.hero.active .turn-ring { opacity: 1; animation: spin 1.1s ease-out 1; }
+.fig.hero.active .art { transform: translateY(-4px) scale(1.06); }
+.fig.hero.active .nameplate { background: #ffe9a8; color: #4a3208; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.fig.ko { opacity: 0.35; filter: grayscale(1); }
+.fig.ko .art { transform: rotate(-16deg) translateY(6px); }
+.fig.dying { opacity: 0; transform: translateY(10px) scale(0.7) rotate(12deg); }
+
+.fig .statuses { position: absolute; top: -4px; right: -6px; display: flex; gap: 2px; font-size: clamp(9px, 1.6vw, 13px); }
+.fig .statuses span { filter: drop-shadow(0 1px 1px rgba(0,0,0,.6)); }
+
+/* Charged special: black until it fills, blue as the bird winds up, glowing
+   when the special is ready to fire. Icon says which move is coming. */
+.cd-row {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  width: 100%;
+  margin-top: 1px;
+  font-size: clamp(0.44rem, 1vw, 0.6rem);
+  font-weight: 800;
+  color: #eaf4ff;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.75);
+}
+.cd-row.hidden { display: none; }
+.cd-ico { line-height: 1; filter: drop-shadow(0 1px 1px rgba(0,0,0,.65)); }
+.cd-track {
+  flex: 1;
+  height: 6px;
+  border-radius: 5px;
+  /* No empty black trough: the bar is only ever the charge that exists. */
+  background: transparent;
+  box-shadow: none;
+  overflow: visible;
+}
+.cd-track i {
+  display: block;
+  height: 100%;
+  width: 0;
+  border-radius: 5px;
+  background: linear-gradient(90deg, #4fb6ff, #1f6fd0);
+  transition: width 0.35s ease;
+}
+.cd-num { font-variant-numeric: tabular-nums; letter-spacing: 0.02em; }
+.cd-row.ready .cd-track i { background: linear-gradient(90deg, #7fd4ff, #2b8ff0); box-shadow: 0 0 8px rgba(90, 190, 255, 0.9); }
+.cd-row.ready .cd-num { color: #c3e9ff; }
+.ghost-row .cd-track i { background: linear-gradient(90deg, #7fd4ff, #2b8ff0); box-shadow: 0 0 8px rgba(90, 190, 255, 0.85); }
+.ghost-row .cd-num { color: #c3e9ff; }
+.ghost-row .cd-ico { filter: drop-shadow(0 0 4px rgba(120, 200, 255, 0.9)); }
+.ghost-row.ready .cd-track i { background: linear-gradient(90deg, #ffe17a, #ff9f1c); box-shadow: 0 0 10px rgba(255, 180, 60, 0.95); }
+.ghost-row.ready .cd-num { color: #ffe0a3; }
+
+/* Saltwind Shore: three ghosts, three colours. */
+.fig.ghost[data-ghost="drowned"] .art { filter: drop-shadow(0 0 12px rgba(111, 198, 255, 0.95)) grayscale(0.35); }
+.fig.ghost[data-ghost="lantern"] .art { filter: drop-shadow(0 0 12px rgba(255, 206, 120, 0.95)) grayscale(0.3); }
+.fig.ghost[data-ghost="fog"] .art { filter: drop-shadow(0 0 12px rgba(215, 225, 235, 0.95)) grayscale(0.6); }
+
+/* A pig the whole flock has been told to kill. */
+.fig.hero.marked .focus-ring {
+  opacity: 1;
+  border-color: rgba(120, 200, 255, 0.95);
+  animation: focusPulse 1.6s ease-in-out infinite;
+}
+.fig.hero.marked .art { filter: drop-shadow(0 0 10px rgba(90, 180, 255, 0.85)) drop-shadow(0 6px 4px rgba(0, 0, 0, 0.28)); }
+
+.fig .shield-bubble {
+  position: absolute; inset: 2% 2% 18%;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, rgba(255,255,255,.5), rgba(140, 220, 255, .18) 55%, rgba(80, 190, 255, .3));
+  box-shadow: inset 0 0 0 2px rgba(190, 240, 255, .8), 0 0 14px rgba(120, 210, 255, .55);
+  pointer-events: none;
+}
+
+.fig .lunge { animation: none; }
+.fig.attacking { animation: lunge 0.42s ease-in-out; }
+@keyframes lunge {
+  0% { transform: translateX(0); }
+  40% { transform: translateX(24px) translateY(-6px); }
+  60% { transform: translateX(24px) translateY(-6px); }
+  100% { transform: translateX(0); }
+}
+.fig.enemy.attacking { animation: lungeLeft 0.42s ease-in-out; }
+@keyframes lungeLeft {
+  0% { transform: translateX(0); }
+  40% { transform: translateX(-22px) translateY(-6px); }
+  60% { transform: translateX(-22px) translateY(-6px); }
+  100% { transform: translateX(0); }
+}
+.fig.hurt .art { animation: hurtFlash .35s ease; }
+@keyframes hurtFlash {
+  0% { filter: drop-shadow(0 6px 4px rgba(0,0,0,.28)) brightness(2.4) saturate(0.4); }
+  100% { filter: drop-shadow(0 6px 4px rgba(0,0,0,.28)) brightness(1); }
+}
+
+.stage.shake { animation: shake 0.34s ease; }
+@keyframes shake {
+  0%, 100% { transform: translate(0, 0); }
+  20% { transform: translate(-7px, 3px); }
+  40% { transform: translate(6px, -3px); }
+  60% { transform: translate(-4px, 2px); }
+  80% { transform: translate(3px, -1px); }
+}
+
+.float-num {
+  position: absolute;
+  z-index: 8;
+  font-weight: 800;
+  font-size: clamp(1.05rem, 2.7vw, 1.7rem);
+  color: #fff;
+  text-shadow: 0 2px 0 #7a1d0c, 0 0 12px rgba(0,0,0,.8), 0 0 4px #000;
+  pointer-events: none;
+  animation: floatUp 0.95s ease-out forwards;
+  transform: translate(-50%, -50%);
+  white-space: nowrap;
+}
+.float-num.heal { color: #c6ff9e; text-shadow: 0 2px 0 #24600f, 0 0 12px rgba(0,0,0,.7); }
+.float-num.shield { color: #a9e9ff; text-shadow: 0 2px 0 #0c4a63, 0 0 12px rgba(0,0,0,.7); font-size: clamp(.8rem, 2vw, 1.1rem); }
+.float-num.miss { color: #ffe28a; text-shadow: 0 2px 0 #6b4a00, 0 0 12px rgba(0,0,0,.7); }
+@keyframes floatUp {
+  0% { opacity: 0; transform: translate(-50%, -20%) scale(0.7); }
+  25% { opacity: 1; transform: translate(-50%, -60%) scale(1.15); }
+  70% { opacity: 1; }
+  100% { opacity: 0; transform: translate(-50%, -160%) scale(1); }
+}
+
+.banner {
+  position: absolute;
+  left: 50%;
+  top: 38%;
+  transform: translate(-50%, -50%);
+  z-index: 9;
+  font-size: clamp(1.1rem, 3.4vw, 1.7rem);
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #fff5cf;
+  text-shadow: 0 3px 0 #7b2f0e, 0 0 20px rgba(0,0,0,.6);
+  padding: 8px 22px;
+  border-radius: 999px;
+  background: rgba(20, 30, 12, 0.55);
+  box-shadow: inset 0 0 0 2px rgba(255, 230, 150, 0.5);
+  animation: bannerIn 1.15s ease forwards;
+  pointer-events: none;
+}
+@keyframes bannerIn {
+  0% { opacity: 0; transform: translate(-50%, -30%) scale(0.8); }
+  15% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+  80% { opacity: 1; }
+  100% { opacity: 0; transform: translate(-50%, -70%) scale(1.04); }
+}
+
+.battle-log {
+  position: absolute;
+  left: 50%;
+  bottom: 4px;
+  transform: translateX(-50%);
+  z-index: 6;
+  font-size: clamp(.66rem, 1.5vw, .82rem);
+  color: #f4ffe4;
+  background: rgba(12, 24, 9, .55);
+  border-radius: 999px;
+  padding: 2px 14px;
+  max-width: 92%;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  opacity: .95;
+  pointer-events: none;
+}
+
+/* HUD */
+.hud {
+  display: flex;
+  align-items: stretch;
+  gap: 10px;
+  padding: 9px 12px calc(10px + env(safe-area-inset-bottom));
+  background: linear-gradient(#223b18, #142610);
+  border-top: 2px solid rgba(255, 255, 255, 0.08);
+  z-index: 5;
+  min-height: 106px;
+}
+.hud-hero {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-right: 10px;
+  border-right: 1px dashed rgba(255, 255, 255, 0.15);
+}
+.hud-hero .art { width: clamp(42px, 8vw, 58px); height: clamp(42px, 8vw, 58px); filter: drop-shadow(0 3px 2px rgba(0,0,0,.4)); }
+.hud-hero .who { min-width: 58px; }
+.hud-hero .who b { display: block; font-size: 0.86rem; color: #ffe9a8; line-height: 1.1; }
+.hud-hero .who span { font-size: 0.66rem; color: #a9c98d; letter-spacing: .06em; text-transform: uppercase; }
+.hud-actions { display: flex; gap: 8px; flex: 1; flex-wrap: wrap; align-items: stretch; }
+.ability {
+  position: relative;
+  flex: 1 1 0;
+  min-width: 96px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1px;
+  padding: 8px 10px 7px;
+  border: 0;
+  border-radius: 14px;
+  background: linear-gradient(#f6edd3, #d8c79c);
+  color: #2c2410;
+  box-shadow: 0 4px 0 #8d7a4e, 0 8px 14px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+  text-align: left;
+  transition: transform .1s, box-shadow .1s, filter .15s;
+  overflow: hidden;
+}
+.ability:hover { filter: brightness(1.05); transform: translateY(-1px); }
+.ability:active { transform: translateY(3px); box-shadow: 0 1px 0 #8d7a4e; }
+.ability .ab-top { display: flex; align-items: center; gap: 5px; width: 100%; }
+.ability .ab-ico { font-size: 1.05rem; line-height: 1; }
+.ability .ab-name { font-size: 0.78rem; font-weight: 800; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ability .ab-desc { font-size: 0.6rem; line-height: 1.15; color: #6a5c38; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
+.ability .cost { margin-left: auto; display: flex; gap: 1.5px; align-items: center; }
+.ability .cost i { width: 5px; height: 5px; border-radius: 50%; background: rgba(60, 44, 8, .25); }
+.ability .cost i.on { background: #e2a10c; }
+.ability.ult { background: linear-gradient(#ffe9a6, #f2c050); box-shadow: 0 4px 0 #b07a13, 0 8px 16px rgba(0,0,0,.3); }
+.ability.ult .ab-desc { color: #7a5a11; }
+.ability.selected {
+  outline: 3px solid #ffe066;
+  box-shadow: 0 0 0 3px rgba(255, 224, 102, .35), 0 4px 0 #8d7a4e, 0 0 22px rgba(255, 220, 90, .8);
+  transform: translateY(-2px);
+}
+.ability:disabled { filter: grayscale(.75) brightness(.72); cursor: not-allowed; transform: none; }
+.ability .lock { position: absolute; top: 4px; right: 6px; font-size: .65rem; opacity: .7; }
+
+.hint-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 0.78rem;
+  color: #ffe9a8;
+  background: rgba(0, 0, 0, 0.28);
+  padding: 4px 12px;
+  min-height: 26px;
+  position: relative;
+  z-index: 6;
+  letter-spacing: 0.02em;
+}
+.hint-bar .pulse { animation: hintPulse 1.1s ease-in-out infinite; }
+@keyframes hintPulse { 50% { opacity: .45; } }
+
+/* ------------------------------------------------------------
+   Overlays
+   ------------------------------------------------------------ */
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: rgba(6, 14, 6, 0.72);
+  backdrop-filter: blur(5px);
+  animation: fadeIn .18s ease;
+}
+@keyframes fadeIn { from { opacity: 0; } }
+.sheet {
+  width: min(460px, 100%);
+  max-height: 88dvh;
+  overflow-y: auto;
+  background: linear-gradient(#fdf6e0, #ead9ae);
+  color: #3a2c0c;
+  border-radius: 26px;
+  padding: 22px 22px 20px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, .6), inset 0 -5px 0 rgba(0, 0, 0, .08);
+  border: 3px solid #fff8e2;
+  text-align: center;
+  animation: sheetIn .26s cubic-bezier(.2,.9,.3,1.3);
+}
+@keyframes sheetIn { from { transform: translateY(16px) scale(.96); opacity: 0; } }
+.sheet.dark {
+  background: linear-gradient(#2a4420, #16260f);
+  color: var(--cream);
+  border-color: rgba(255, 255, 255, .14);
+}
+.sheet h2 { margin: 2px 0 6px; font-size: 1.5rem; letter-spacing: .01em; }
+.sheet p { margin: 6px 0; font-size: .92rem; line-height: 1.45; color: #6b5a2e; }
+.sheet.dark p { color: #cfe4b6; }
+.sheet .eyebrow { font-size: .68rem; letter-spacing: .28em; text-transform: uppercase; color: #a98a3c; font-weight: 800; }
+.sheet.dark .eyebrow { color: #ffcf6b; }
+.sheet-actions { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 16px; }
+
+/* Compendium keeps its close control at the top, in reach while the long
+   bestiary scrolls underneath it. */
+.sheet .sheet-x-row {
+  position: sticky;
+  top: 6px;
+  z-index: 6;
+  display: flex;
+  justify-content: flex-end;
+  height: 28px;
+  margin: -10px -4px 2px;
+  pointer-events: none;
+}
+.sheet .sheet-x {
+  pointer-events: auto;
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  margin-top: -2px;
+  padding: 0;
+  border: 1px solid rgba(107, 75, 18, 0.35);
+  border-radius: 50%;
+  background: rgba(255, 249, 232, 0.94);
+  box-shadow: 0 3px 10px rgba(60, 40, 10, 0.16);
+  color: #6b4b12;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 900;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.15s ease, color 0.15s ease;
+}
+.sheet .sheet-x:hover { background: #fffdf5; color: #3a2c0c; transform: translateY(-1px); }
+.sheet .sheet-x:focus-visible { outline: 3px solid #7fd4ff; outline-offset: 2px; }
+.sheet.dark .sheet-x { border-color: rgba(255, 214, 140, 0.35); background: rgba(20, 32, 14, 0.92); color: #ffe6a8; }
+.sheet.dark .sheet-x:hover { background: rgba(40, 60, 30, 0.95); color: #fff4d2; }
+.enemy-preview { display: flex; justify-content: center; gap: 6px; flex-wrap: wrap; margin: 10px 0 4px; }
+.enemy-preview .art { width: 54px; height: 54px; }
+.enemy-preview .pv { display: flex; flex-direction: column; align-items: center; font-size: .62rem; color: #7a6a3c; max-width: 62px; }
+.sheet.dark .enemy-preview .pv { color: #b9d49c; }
+.pv-note { text-align: center; font-size: .7rem; letter-spacing: .02em; color: #8d7b4a; margin: 2px 0 8px; }
+.sheet.dark .pv-note { color: #9fbd85; }
+
+/* Compendium detail sheet */
+.index-card { cursor: pointer; }
+.index-card:focus-visible { outline: 3px solid #7fd4ff; outline-offset: 2px; }
+.entry-detail { display: flex; gap: 18px; align-items: flex-start; text-align: left; }
+.entry-art { flex: 0 0 132px; display: flex; justify-content: center; }
+.entry-art svg { width: 132px; height: 132px; filter: drop-shadow(0 8px 14px rgba(0, 0, 0, 0.25)); }
+.entry-body { flex: 1 1 auto; min-width: 0; }
+.entry-body h2 { margin: 2px 0 6px; }
+.entry-title { display: block; font-size: 0.8rem; color: #8a6a2f; margin-bottom: 6px; }
+.entry-moves { display: flex; flex-direction: column; gap: 6px; margin: 6px 0 4px; }
+.entry-moves .mv { background: rgba(0, 0, 0, 0.05); border-radius: 10px; padding: 7px 10px; }
+.sheet.dark .entry-moves .mv { background: rgba(255, 255, 255, 0.07); }
+.entry-moves .mv b { display: block; font-size: 0.82rem; color: #6b4b12; }
+.sheet.dark .entry-moves .mv b { color: #ffd36b; }
+.entry-moves .mv span { font-size: 0.72rem; color: #7a6a3c; }
+.sheet.dark .entry-moves .mv span { color: #b9d49c; }
+@media (max-width: 640px) {
+  .entry-detail { flex-direction: column; align-items: center; text-align: center; }
+}
+.entry-detail .base-h { color: #6b4b12; }
+.sheet.dark .entry-detail .base-h { color: #ffd36b; }
+/* Compendium headings on the cream sheet need dark ink, not the dark-panel gold. */
+.sheet .base-h { color: #5d4110; }
+.sheet .idx-world-h { color: #5d4110; }
+.sheet .idx-world-h em { color: #8a6a2f; }
+.sheet.dark .base-h { color: #ffd36b; }
+.sheet.dark .idx-world-h { color: #ffd36b; }
+.sheet.dark .idx-world-h em { color: #b9d49c; }
+.stars-row { display: flex; justify-content: center; gap: 10px; font-size: 2.4rem; margin: 10px 0 2px; }
+.stars-row .star-slot { color: #cdbb8c; transform: scale(.8); transition: transform .25s, color .25s; }
+.stars-row .star-slot.on { color: #ffbf2f; transform: scale(1.12); text-shadow: 0 3px 0 #b07a13; animation: starPop .4s cubic-bezier(.2,.9,.3,1.6); }
+@keyframes starPop { 0% { transform: scale(0) rotate(-40deg); } 70% { transform: scale(1.35) rotate(8deg); } 100% { transform: scale(1.12); } }
+.reward-line {
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: .86rem; padding: 7px 12px; margin: 5px 0;
+  background: rgba(0,0,0,.05); border-radius: 10px;
+}
+.sheet.dark .reward-line { background: rgba(255,255,255,.07); }
+.reward-line b { color: #8a5a0f; }
+.sheet.dark .reward-line b { color: #ffd36b; }
+.levelup-card {
+  display: flex; align-items: center; gap: 10px; text-align: left;
+  background: rgba(255, 217, 120, .35); border-radius: 12px; padding: 6px 10px; margin: 4px 0;
+}
+.sheet.dark .levelup-card { background: rgba(255, 210, 100, .13); }
+.levelup-card .art { width: 38px; height: 38px; }
+.levelup-card b { font-size: .85rem; display: block; }
+.levelup-card span { font-size: .7rem; color: #7a6a3c; }
+.sheet.dark .levelup-card span { color: #bfd8a4; }
+.map-tooltip { opacity: 0; }
+
+/* Responsive tweaks */
+@media (max-width: 560px) {
+  .hud { min-height: 96px; padding: 7px 8px calc(8px + env(safe-area-inset-bottom)); gap: 6px; }
+  .hud-hero { padding-right: 6px; }
+  .hud-hero .who { display: none; }
+  .hud-actions { gap: 5px; }
+  .ability { min-width: 0; padding: 6px 7px; border-radius: 11px; }
+  .ability .ab-name { font-size: .68rem; }
+  .ability .ab-desc { display: none; }
+  .ability .ab-ico { font-size: .9rem; }
+  .side.enemies { max-width: 70%; gap: 1px; }
+  .side.heroes { max-width: 46%; gap: 0; }
+  .battle-log { display: none; }
+  .map-top .world h1 { font-size: 1.05rem; }
+  .party { padding: 4px 8px 4px 4px; gap: 3px; }
+  .party .art { width: 30px; height: 30px; }
+  .xp-bar { width: 44px; }
+}
+@media (max-height: 600px) {
+  .stage { min-height: 230px; }
+  .hud { min-height: 84px; }
+  .fig { width: clamp(48px, 8vw, 76px); }
+  .fig.enemy { width: clamp(50px, 9vw, 86px); }
+}
+
+/* Camp marker is scenery: it must never swallow a click on the road. */
+.map-deco { pointer-events: none; }
+
+/* Daily chest button shows a dot while it is unclaimed. */
+.icon-btn.ready { position: relative; box-shadow: inset 0 0 0 2px #f7c948; }
+.icon-btn.ready::after {
+  content: ''; position: absolute; top: -3px; right: -3px; width: 9px; height: 9px;
+  border-radius: 50%; background: #ff5a4d; box-shadow: 0 0 6px #ff5a4d;
+}
+
+/* One rotating hint under the main menu logo. */
+.title-tip {
+  margin-top: 6px;
+  max-width: 430px;
+  padding: 9px 15px;
+  border-radius: 14px;
+  background: rgba(0, 0, 0, 0.26);
+  border: 1px solid rgba(255, 233, 168, 0.22);
+  color: #e9f6d4;
+  font-size: 0.86rem;
+  line-height: 1.45;
+  text-align: center;
+}
+
+/* ============================================================
+   World 5 + biome backdrops
+   The kingdom gets its own sky; caverns, forests and the throne
+   room override whatever world they sit in, so a cave is a cave
+   in every one of the five worlds.
+   ============================================================ */
+.stage.world-5 {
+  background:
+    radial-gradient(72% 42% at 50% 0%, rgba(255, 238, 186, 0.95), rgba(255, 238, 186, 0) 72%),
+    linear-gradient(#f2cf98 0%, #f8e9cf 34%, #c9ae7e 68%, #a48c63 100%);
+}
+.stage.biome-castle {
+  background:
+    radial-gradient(58% 28% at 50% 96%, rgba(255, 214, 122, 0.35), rgba(255, 214, 122, 0) 72%),
+    linear-gradient(#3b3550 0%, #574a5e 24%, #7d6a60 50%, #a5917a 76%, #c2ab8a 100%);
+}
+.stage.biome-forest {
+  background:
+    radial-gradient(52% 34% at 22% 8%, rgba(214, 255, 169, 0.5), rgba(214, 255, 169, 0) 70%),
+    linear-gradient(#94c46d 0%, #6da24f 32%, #43703a 70%, #2c4f2e 100%);
+}
+.stage.biome-cave {
+  background:
+    radial-gradient(34% 22% at 78% 10%, rgba(255, 196, 96, 0.5), rgba(255, 196, 96, 0) 72%),
+    linear-gradient(#141a22 0%, #1d2530 28%, #2a3138 58%, #3b3a34 100%);
+  box-shadow: inset 0 0 120px rgba(0, 0, 0, 0.6);
+}
+.stage.biome-throne {
+  background:
+    radial-gradient(50% 32% at 50% 6%, rgba(255, 222, 120, 0.85), rgba(255, 222, 120, 0) 72%),
+    linear-gradient(#4a2338 0%, #6b2f45 26%, #8d4a52 56%, #b98a63 82%, #d8b68b 100%);
+}
+.stage.biome-snow {
+  background:
+    radial-gradient(60% 34% at 50% 0%, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0) 70%),
+    linear-gradient(#cfe6f7 0%, #eef8ff 40%, #bcd6e8 72%, #9db9cd 100%);
+}
+.stage.biome-canyon {
+  background:
+    radial-gradient(62% 34% at 50% 4%, rgba(255, 226, 160, 0.85), rgba(255, 226, 160, 0) 70%),
+    linear-gradient(#f6c98f 0%, #f2d9b0 36%, #c98f5c 70%, #a06a41 100%);
+}
+.stage.biome-beach {
+  background:
+    radial-gradient(58% 32% at 50% 2%, rgba(214, 248, 255, 0.9), rgba(214, 248, 255, 0) 72%),
+    linear-gradient(#a9e6f0 0%, #eafaf3 40%, #f3e3b0 74%, #dcc58a 100%);
+}
+
+/* A world you can see but not yet enter. */
+.world-tab.locked { opacity: 0.62; filter: saturate(0.55); }
+
+/* ------------------------------------------------------------
+   Title screen — night carnival
+   ------------------------------------------------------------ */
+#screen-title {
+  overflow: hidden;
+  background:
+    radial-gradient(120% 82% at 50% 120%, #ffb45f 0%, #ff7a3d 15%, rgba(255, 122, 61, 0) 48%),
+    radial-gradient(90% 70% at 84% 10%, #4a2a80 0%, rgba(74, 42, 128, 0) 62%),
+    radial-gradient(80% 60% at 12% 20%, #14526b 0%, rgba(20, 82, 107, 0) 60%),
+    linear-gradient(#050510 0%, #0e0d2a 34%, #221849 62%, #3a2450 100%);
+}
+
+/* Aurora wash behind everything. */
+#screen-title::before {
+  content: "";
+  position: absolute;
+  inset: -20%;
+  background:
+    radial-gradient(closest-side, rgba(90, 255, 214, 0.22), transparent 70%) 18% 26% / 52% 46% no-repeat,
+    radial-gradient(closest-side, rgba(255, 118, 214, 0.20), transparent 70%) 80% 30% / 58% 50% no-repeat,
+    radial-gradient(closest-side, rgba(126, 158, 255, 0.18), transparent 70%) 50% 82% / 70% 44% no-repeat;
+  filter: blur(20px);
+  opacity: 1;
+  pointer-events: none;
+  animation: auroraDrift 19s ease-in-out infinite alternate;
+}
+
+@keyframes auroraDrift {
+  from { transform: translate3d(-2%, 1%, 0) scale(1.02); }
+  to { transform: translate3d(3%, -2%, 0) scale(1.09); }
+}
+
+/* Sky furniture. */
+#screen-title .sky {
+  /* Scrolls with the page like the ground below: not pinned, so the
+     background drifts top-to-bottom as the menu is scrolled. */
+  position: relative;
+  top: -90px;
+  margin-bottom: -100dvh;
+  flex: 0 0 auto;
+  /* The menu has side padding; bleed the sky into it so the full-width
+     grass below never leaves a strip of bare page down the edges. */
+  width: calc(100% + var(--title-pad) * 2);
+  margin-left: calc(-1 * var(--title-pad));
+  margin-right: calc(-1 * var(--title-pad));
+  height: 100dvh;
+  /* The hills run past the first screen so their feet meet the title grass.
+     clip (not hidden) lets them paint below the box without adding scroll. */
+  overflow: clip;
+  overflow-clip-margin: 200px;
+  pointer-events: none;
+  z-index: 1;
+}
+
+#screen-title .sky-stars {
+  position: absolute;
+  inset: -60% -10% -10%;
+  background-image:
+    radial-gradient(1.6px 1.6px at 20px 30px, #ffffff 50%, transparent 51%),
+    radial-gradient(1.1px 1.1px at 90px 120px, #cfe6ff 50%, transparent 51%),
+    radial-gradient(1.4px 1.4px at 150px 64px, #fff6d8 50%, transparent 51%),
+    radial-gradient(1px 1px at 210px 150px, #ffffff 50%, transparent 51%);
+  background-size: 190px 190px, 230px 230px, 270px 270px, 310px 310px;
+  opacity: 0.85;
+  animation: starTwinkle 4.4s ease-in-out infinite alternate, starDrift 160s linear infinite;
+}
+
+@keyframes starTwinkle {
+  from { opacity: 0.45; }
+  to { opacity: 0.95; }
+}
+
+@keyframes starDrift {
+  to { background-position: 40px 90px, -30px 70px, 20px -60px, -40px 50px; }
+}
+
+#screen-title .sky-moon {
+  position: absolute;
+  top: 7%;
+  right: 11%;
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 34% 32%, #fff9e4, #ffdf9b 56%, #f6b45e 100%);
+  box-shadow: 0 0 60px rgba(255, 214, 130, 0.6), 0 0 150px rgba(255, 170, 90, 0.35);
+  animation: moonFloat 11s ease-in-out infinite alternate;
+}
+
+@keyframes moonFloat {
+  from { transform: translateY(0); }
+  to { transform: translateY(-12px); }
+}
+
+#screen-title .sky-hills {
+  position: absolute;
+  left: -8%;
+  right: -8%;
+  bottom: -10%;
+  height: 45%;
+  background: linear-gradient(#231c44, #0a0818);
+  clip-path: polygon(0 62%, 12% 36%, 26% 56%, 40% 28%, 54% 52%, 68% 32%, 82% 58%, 100% 38%, 100% 100%, 0 100%);
+}
+
+#screen-title .sky-hills.far {
+  bottom: -10%;
+  height: 50%;
+  background: linear-gradient(#2e2456, #16112f);
+  opacity: 0.65;
+  clip-path: polygon(0 74%, 16% 46%, 32% 66%, 48% 40%, 64% 62%, 78% 42%, 92% 64%, 100% 50%, 100% 100%, 0 100%);
+}
+
+/* Copy. */
+#screen-title .title-inner { gap: 12px; z-index: 2; margin-top: 0; }
+
+#screen-title .title-kicker {
+  color: #ffe6a8;
+  letter-spacing: 0.5em;
+  text-shadow: 0 2px 12px rgba(255, 186, 80, 0.55);
+  animation: kickerGlow 3.6s ease-in-out infinite;
+}
+
+@keyframes kickerGlow {
+  50% { text-shadow: 0 2px 22px rgba(255, 214, 120, 0.9); }
+}
+
+#screen-title .logo {
+  position: relative;
+  color: #fff4d2;
+  text-shadow: 0 4px 0 #b95f1f, 0 10px 0 #77320f, 0 20px 34px rgba(255, 140, 60, 0.4);
+  animation: logoFloat 6s ease-in-out infinite;
+}
+
+#screen-title .logo span {
+  color: #ffd166;
+  text-shadow: 0 4px 0 #b95f1f, 0 10px 0 #77320f, 0 20px 34px rgba(255, 150, 60, 0.5);
+}
+
+#screen-title .logo::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -40%;
+  width: 34%;
+  height: 100%;
+  background: linear-gradient(100deg, transparent, rgba(255, 255, 255, 0.55), transparent);
+  transform: skewX(-18deg);
+  mix-blend-mode: screen;
+  animation: logoSweep 6.5s ease-in-out infinite;
+}
+
+@keyframes logoSweep {
+  0%, 62% { left: -45%; opacity: 0; }
+  70% { opacity: 0.9; }
+  88%, 100% { left: 112%; opacity: 0; }
+}
+
+@keyframes logoFloat {
+  50% { transform: rotate(-2deg) translateY(-6px); }
+}
+
+#screen-title .logo-sub { color: #ffe9c0; text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5); }
+
+/* The flying pigs. */
+#screen-title .title-heroes {
+  position: relative;
+  display: block;
+  width: min(560px, 92vw);
+  height: clamp(122px, 30vw, 178px);
+  margin: 8px 0 0;
+  filter: drop-shadow(0 18px 18px rgba(0, 0, 0, 0.5));
+}
+
+#screen-title .title-heroes > * { animation: none !important; }
+
+#screen-title .title-heroes > .flyer {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  will-change: transform;
+}
+
+#screen-title .title-heroes .art {
+  width: clamp(58px, 15vw, 96px) !important;
+  height: clamp(58px, 15vw, 96px) !important;
+  filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.45));
+}
+
+/* Buttons. */
+#screen-title #playBtn {
+  font-size: 1.14rem;
+  padding: 14px 34px;
+  background: linear-gradient(#ffe490, #ffb02e);
+  color: #3a2205;
+  border-color: #a75f10;
+  box-shadow: 0 6px 0 #a75f10, 0 16px 32px rgba(255, 150, 40, 0.4);
+  animation: playPulse 2.8s ease-in-out infinite;
+}
+
+@keyframes playPulse {
+  50% { box-shadow: 0 6px 0 #a75f10, 0 18px 44px rgba(255, 176, 60, 0.7); transform: translateY(-1px); }
+}
+
+#screen-title .title-actions.small-actions .btn {
+  background: rgba(20, 14, 38, 0.55);
+  border-color: rgba(255, 214, 140, 0.28);
+  color: #ffe6b8;
+}
+
+#screen-title .title-actions.small-actions .btn:hover { border-color: rgba(255, 214, 140, 0.6); }
+
+#screen-title .title-stars,
+#screen-title .title-tip,
+#screen-title .title-foot { color: #f2e6cf; }
+
+/* ============================================================
+   Backdrop pools
+   Battle.start() tags the stage with world-N + biome-X. Every world draws
+   from a handful of skies so consecutive fights do not look identical, and
+   the dungeon has its own four layers that cycle every five depths.
+   ============================================================ */
+
+/* ---------------- World 1 extras ---------------- */
+.stage.biome-orchard {
+  background:
+    radial-gradient(60% 34% at 28% 4%, rgba(255, 186, 216, 0.9), transparent 70%),
+    radial-gradient(52% 30% at 76% 8%, rgba(255, 220, 236, 0.85), transparent 72%),
+    linear-gradient(#bfe6ff 0%, #dff2c8 42%, #a8d96a 58%, #6fae3d 100%);
+}
+.stage.biome-orchard::before {
+  background:
+    radial-gradient(46% 100% at 10% 100%, #ffc3dd 0 46%, transparent 47%),
+    radial-gradient(38% 88% at 34% 100%, #ffd7e8 0 44%, transparent 45%),
+    radial-gradient(44% 96% at 70% 100%, #ffbdd8 0 46%, transparent 47%),
+    radial-gradient(36% 80% at 94% 100%, #ffd3e6 0 44%, transparent 45%),
+    linear-gradient(#8ec95a, #5f9a33);
+  opacity: 0.92;
+}
+
+.stage.biome-river {
+  background:
+    radial-gradient(70% 30% at 50% 100%, rgba(90, 200, 220, 0.5), transparent 70%),
+    linear-gradient(#9fd7f0 0%, #d3eefa 36%, #6fc3d9 50%, #3f95b0 60%, #7fb04c 61%, #4f7f2c 100%);
+}
+.stage.biome-river::before {
+  background:
+    radial-gradient(60% 70% at 8% 100%, #6faa45 0 60%, transparent 61%),
+    radial-gradient(64% 70% at 92% 100%, #79b34d 0 60%, transparent 61%);
+  opacity: 0.85;
+}
+.stage.biome-river::after {
+  background:
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.35) 0 22px, transparent 22px 48px),
+    linear-gradient(#4fa6bf, #2f7891);
+  box-shadow: inset 0 6px 0 rgba(255, 255, 255, 0.3);
+}
+
+.stage.biome-night {
+  background:
+    radial-gradient(60% 26% at 50% 0%, rgba(120, 150, 255, 0.45), transparent 70%),
+    linear-gradient(#0b1030 0%, #17204a 42%, #243057 58%, #1b2740 59%, #0d1322 100%);
+}
+.stage.biome-night::before {
+  background:
+    radial-gradient(2px 2px at 12% 22%, #fff, transparent 60%),
+    radial-gradient(2px 2px at 28% 44%, #dfe8ff, transparent 60%),
+    radial-gradient(1.6px 1.6px at 44% 18%, #fff, transparent 60%),
+    radial-gradient(2px 2px at 62% 38%, #fff2c8, transparent 60%),
+    radial-gradient(1.6px 1.6px at 78% 20%, #fff, transparent 60%),
+    radial-gradient(1.6px 1.6px at 90% 46%, #dfe8ff, transparent 60%),
+    radial-gradient(66% 90% at 20% 100%, #1d3b2c 0 60%, transparent 61%),
+    radial-gradient(60% 80% at 78% 100%, #16302a 0 60%, transparent 61%);
+  opacity: 0.95;
+}
+.stage.biome-night::after {
+  background: linear-gradient(#1d3326, #0f1d16);
+  box-shadow: inset 0 6px 0 rgba(150, 210, 255, 0.22);
+}
+.stage.biome-night .cloud { background: rgba(180, 200, 255, 0.3); }
+
+/* ---------------- World 2 extras ---------------- */
+.stage.biome-mesa {
+  background:
+    radial-gradient(38% 30% at 50% 4%, rgba(255, 246, 214, 0.95), transparent 70%),
+    linear-gradient(#ffd9a6 0%, #ffc08a 34%, #d4885a 52%, #b06442 68%, #8c4a2e 100%);
+}
+.stage.biome-mesa::before {
+  background:
+    linear-gradient(transparent 46%, rgba(150, 82, 48, 0.9) 46% 58%, transparent 58%),
+    radial-gradient(50% 100% at 14% 100%, #b76a41 0 58%, transparent 59%),
+    radial-gradient(40% 82% at 62% 100%, #a75c38 0 58%, transparent 59%),
+    radial-gradient(46% 94% at 94% 100%, #c07a4a 0 58%, transparent 59%);
+  opacity: 0.95;
+}
+.stage.biome-mesa::after {
+  background: linear-gradient(#c98a5c, #96603a);
+  box-shadow: inset 0 6px 0 rgba(255, 226, 190, 0.28);
+}
+
+.stage.biome-ruins {
+  background:
+    radial-gradient(58% 28% at 50% 2%, rgba(226, 238, 248, 0.85), transparent 72%),
+    linear-gradient(#8fa4bd 0%, #c3d2e0 38%, #9aa6b4 54%, #6f7784 78%, #565d68 100%);
+}
+.stage.biome-ruins::before {
+  background:
+    repeating-linear-gradient(90deg, #8b93a1 0 16px, transparent 16px 44px),
+    linear-gradient(transparent 30%, rgba(104, 112, 124, 0.9) 30% 100%);
+  opacity: 0.6;
+}
+.stage.biome-ruins::after {
+  background:
+    repeating-linear-gradient(90deg, rgba(0, 0, 0, 0.18) 0 2px, transparent 2px 56px),
+    linear-gradient(#8d94a1, #646b78);
+  box-shadow: inset 0 6px 0 rgba(255, 255, 255, 0.24);
+}
+
+.stage.biome-oasis {
+  background:
+    radial-gradient(44% 30% at 50% 100%, rgba(64, 190, 176, 0.75), transparent 70%),
+    linear-gradient(#ffcf9a 0%, #ffe6bd 38%, #93d9c7 54%, #46a89f 64%, #cdb478 65%, #a48d54 100%);
+}
+.stage.biome-oasis::before {
+  background:
+    radial-gradient(46% 100% at 8% 100%, #c8a86a 0 58%, transparent 59%),
+    radial-gradient(44% 92% at 92% 100%, #d6b877 0 58%, transparent 59%);
+  opacity: 0.9;
+}
+
+/* ---------------- World 3 extras ---------------- */
+.stage.biome-pines {
+  background:
+    radial-gradient(60% 30% at 50% 0%, rgba(255, 255, 255, 0.95), transparent 72%),
+    linear-gradient(#cfe6f7 0%, #e8f5ff 40%, #e3f1fb 54%, #c3d9e6 100%);
+}
+.stage.biome-pines::before {
+  background:
+    repeating-linear-gradient(74deg, rgba(34, 72, 62, 0.6) 0 7px, transparent 7px 30px),
+    linear-gradient(transparent 26%, rgba(214, 238, 255, 0.9) 26% 100%);
+  opacity: 0.85;
+}
+.stage.biome-pines::after {
+  background: linear-gradient(#eefaff, #b9d3e2);
+  box-shadow: inset 0 6px 0 rgba(255, 255, 255, 0.7);
+}
+
+.stage.biome-ice {
+  background:
+    radial-gradient(52% 30% at 50% 0%, rgba(255, 255, 255, 0.95), transparent 70%),
+    linear-gradient(#dff6ff 0%, #f2fdff 38%, #b8e6f2 54%, #8fd0e6 100%);
+}
+.stage.biome-ice::before {
+  background:
+    repeating-linear-gradient(58deg, rgba(255, 255, 255, 0.75) 0 3px, transparent 3px 40px),
+    repeating-linear-gradient(-42deg, rgba(180, 230, 245, 0.7) 0 2px, transparent 2px 54px);
+  opacity: 0.9;
+}
+.stage.biome-ice::after {
+  background: linear-gradient(rgba(226, 250, 255, 0.95), rgba(150, 205, 226, 0.95));
+  box-shadow: inset 0 6px 0 rgba(255, 255, 255, 0.85);
+}
+
+.stage.biome-aurora {
+  background:
+    radial-gradient(58% 22% at 30% 12%, rgba(110, 255, 190, 0.45), transparent 70%),
+    radial-gradient(52% 20% at 72% 16%, rgba(180, 140, 255, 0.4), transparent 72%),
+    linear-gradient(#070d1f 0%, #16213f 48%, #22304f 60%, #0d1424 100%);
+}
+.stage.biome-aurora::before {
+  background:
+    radial-gradient(2px 2px at 18% 24%, #fff, transparent 60%),
+    radial-gradient(1.6px 1.6px at 38% 40%, #dfe8ff, transparent 60%),
+    radial-gradient(2px 2px at 66% 22%, #fff, transparent 60%),
+    radial-gradient(1.6px 1.6px at 86% 42%, #fff2c8, transparent 60%),
+    radial-gradient(64% 88% at 16% 100%, #17363a 0 60%, transparent 61%),
+    radial-gradient(58% 78% at 82% 100%, #122b33 0 60%, transparent 61%);
+  opacity: 0.95;
+}
+.stage.biome-aurora::after {
+  background: linear-gradient(#16333a, #0a1a20);
+  box-shadow: inset 0 6px 0 rgba(160, 255, 220, 0.25);
+}
+.stage.biome-aurora .cloud { background: rgba(190, 220, 255, 0.28); }
+
+/* ---------------- World 4 extras ---------------- */
+.stage.biome-lagoon {
+  background:
+    radial-gradient(56% 30% at 50% 100%, rgba(90, 220, 220, 0.55), transparent 70%),
+    linear-gradient(#bfeef7 0%, #eafcff 34%, #4fd0d8 50%, #23a6bb 62%, #f6ecc8 63%, #e2d199 100%);
+}
+.stage.biome-lagoon::before {
+  background:
+    radial-gradient(44% 100% at 10% 100%, #f2e6bf 0 58%, transparent 59%),
+    radial-gradient(38% 90% at 90% 100%, #efe1b6 0 58%, transparent 59%);
+  opacity: 0.92;
+}
+
+.stage.biome-cliffs {
+  background:
+    radial-gradient(52% 26% at 50% 0%, rgba(226, 244, 255, 0.9), transparent 72%),
+    linear-gradient(#a8d8ea 0%, #d9eef7 32%, #8e9098 48%, #6a6d75 62%, #33424f 63%, #22303c 100%);
+}
+.stage.biome-cliffs::before {
+  background:
+    linear-gradient(72deg, #7b7d85 0 30%, transparent 30%),
+    linear-gradient(-64deg, transparent 62%, #5d6169 62%),
+    linear-gradient(transparent 52%, rgba(60, 66, 76, 0.9) 52% 100%);
+  opacity: 0.9;
+}
+.stage.biome-cliffs::after {
+  background: linear-gradient(#3f5d6d, #24333d);
+  box-shadow: inset 0 6px 0 rgba(200, 235, 255, 0.3);
+}
+
+.stage.biome-storm {
+  background:
+    radial-gradient(60% 26% at 46% 6%, rgba(210, 224, 240, 0.45), transparent 72%),
+    linear-gradient(#4a5568 0%, #6b7688 36%, #8d9aa8 52%, #565f6b 68%, #333b45 100%);
+}
+.stage.biome-storm::before {
+  background:
+    repeating-linear-gradient(76deg, rgba(220, 236, 250, 0.35) 0 2px, transparent 2px 22px),
+    radial-gradient(52% 70% at 24% 100%, #404b58 0 60%, transparent 61%),
+    radial-gradient(48% 64% at 80% 100%, #39434f 0 60%, transparent 61%);
+  opacity: 0.9;
+  animation: rainSweep 2.4s linear infinite;
+}
+.stage.biome-storm::after {
+  background: linear-gradient(#47525f, #2b333c);
+  box-shadow: inset 0 6px 0 rgba(220, 236, 250, 0.22);
+}
+.stage.biome-storm .cloud { background: rgba(120, 134, 150, 0.85); }
+@keyframes rainSweep {
+  to { background-position: 44px 120px, 0 0, 0 0; }
+}
+
+/* ---------------- World 5 extras ---------------- */
+.stage.biome-courtyard {
+  background:
+    radial-gradient(56% 28% at 50% 0%, rgba(255, 244, 214, 0.9), transparent 72%),
+    linear-gradient(#8ea0b8 0%, #c7d4e2 38%, #b3ad9e 54%, #8b8272 100%);
+}
+.stage.biome-courtyard::before {
+  background:
+    repeating-linear-gradient(90deg, #9b9382 0 18px, transparent 18px 50px),
+    linear-gradient(transparent 24%, rgba(140, 132, 116, 0.85) 24% 100%);
+  opacity: 0.65;
+}
+.stage.biome-courtyard::after {
+  background:
+    repeating-linear-gradient(90deg, rgba(0, 0, 0, 0.16) 0 2px, transparent 2px 64px),
+    linear-gradient(#a49b88, #7c7462);
+  box-shadow: inset 0 6px 0 rgba(255, 250, 235, 0.3);
+}
+
+.stage.biome-moonlit {
+  background:
+    radial-gradient(46% 26% at 50% 0%, rgba(200, 216, 255, 0.55), transparent 72%),
+    linear-gradient(#101530 0%, #1e2749 38%, #3a3f5e 56%, #242a44 100%);
+}
+.stage.biome-moonlit::before {
+  background:
+    radial-gradient(2px 2px at 16% 20%, #fff, transparent 60%),
+    radial-gradient(1.6px 1.6px at 70% 14%, #e6efff, transparent 60%),
+    radial-gradient(1.6px 1.6px at 42% 36%, #fff, transparent 60%),
+    repeating-linear-gradient(90deg, rgba(60, 70, 100, 0.75) 0 22px, transparent 22px 60px),
+    linear-gradient(transparent 34%, rgba(38, 46, 74, 0.95) 34% 100%);
+  opacity: 0.9;
+}
+.stage.biome-moonlit::after {
+  background: linear-gradient(#333c5c, #1d2338);
+  box-shadow: inset 0 6px 0 rgba(190, 210, 255, 0.3);
+}
+.stage.biome-moonlit .cloud { background: rgba(180, 200, 255, 0.32); }
+
+/* ---------------- Dungeon layers ---------------- */
+.stage.biome-dungeon-crypt,
+.stage.biome-dungeon-ember,
+.stage.biome-dungeon-frost,
+.stage.biome-dungeon-void { box-shadow: inset 0 0 140px rgba(0, 0, 0, 0.75); }
+.stage.biome-dungeon-crypt .cloud,
+.stage.biome-dungeon-ember .cloud,
+.stage.biome-dungeon-frost .cloud,
+.stage.biome-dungeon-void .cloud,
+.stage.biome-cave .cloud { opacity: 0; }
+
+.stage.biome-dungeon-crypt {
+  background:
+    radial-gradient(24% 20% at 14% 6%, rgba(255, 170, 70, 0.55), transparent 70%),
+    radial-gradient(24% 20% at 86% 6%, rgba(255, 170, 70, 0.45), transparent 70%),
+    linear-gradient(#12121a 0%, #1b1a24 40%, #262430 62%, #17161f 100%);
+}
+.stage.biome-dungeon-crypt::before {
+  background:
+    repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.07) 0 2px, transparent 2px 42px),
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.05) 0 2px, transparent 2px 64px);
+  opacity: 0.85;
+}
+.stage.biome-dungeon-crypt::after {
+  background:
+    repeating-linear-gradient(90deg, rgba(0, 0, 0, 0.3) 0 3px, transparent 3px 72px),
+    linear-gradient(#2a2833, #14131b);
+  box-shadow: inset 0 6px 0 rgba(255, 200, 120, 0.18);
+}
+
+.stage.biome-dungeon-ember {
+  background:
+    radial-gradient(60% 34% at 50% 104%, rgba(255, 110, 40, 0.85), transparent 72%),
+    radial-gradient(30% 18% at 18% 12%, rgba(255, 150, 60, 0.35), transparent 70%),
+    linear-gradient(#1a0f10 0%, #2a1512 40%, #3d1c15 62%, #170b0a 100%);
+}
+.stage.biome-dungeon-ember::before {
+  background:
+    repeating-linear-gradient(104deg, rgba(255, 120, 40, 0.55) 0 3px, transparent 3px 46px),
+    repeating-linear-gradient(-72deg, rgba(255, 90, 30, 0.35) 0 2px, transparent 2px 58px);
+  opacity: 0.8;
+}
+.stage.biome-dungeon-ember::after {
+  background: linear-gradient(#4a2418, #1e100c);
+  box-shadow: inset 0 6px 0 rgba(255, 150, 60, 0.35);
+}
+
+.stage.biome-dungeon-frost {
+  background:
+    radial-gradient(58% 30% at 50% 0%, rgba(160, 230, 255, 0.55), transparent 72%),
+    linear-gradient(#0d1620 0%, #142634 42%, #1e3b48 60%, #0b141b 100%);
+}
+.stage.biome-dungeon-frost::before {
+  background:
+    repeating-linear-gradient(62deg, rgba(190, 240, 255, 0.4) 0 2px, transparent 2px 52px),
+    repeating-linear-gradient(-48deg, rgba(140, 210, 240, 0.3) 0 2px, transparent 2px 66px);
+  opacity: 0.85;
+}
+.stage.biome-dungeon-frost::after {
+  background: linear-gradient(#2b4655, #12222b);
+  box-shadow: inset 0 6px 0 rgba(190, 240, 255, 0.3);
+}
+
+.stage.biome-dungeon-void {
+  background:
+    radial-gradient(46% 30% at 50% 42%, rgba(150, 90, 255, 0.5), transparent 70%),
+    radial-gradient(30% 20% at 22% 14%, rgba(90, 200, 255, 0.25), transparent 72%),
+    linear-gradient(#0a0614 0%, #170f28 42%, #241537 60%, #08040f 100%);
+}
+.stage.biome-dungeon-void::before {
+  background:
+    radial-gradient(2px 2px at 14% 28%, #d9c8ff, transparent 60%),
+    radial-gradient(1.6px 1.6px at 44% 16%, #fff, transparent 60%),
+    radial-gradient(2px 2px at 74% 34%, #cbb6ff, transparent 60%),
+    radial-gradient(1.6px 1.6px at 88% 18%, #fff, transparent 60%);
+  opacity: 0.9;
+  animation: voidPulse 4.6s ease-in-out infinite alternate;
+}
+.stage.biome-dungeon-void::after {
+  background: linear-gradient(#2a1b3d, #100a1a);
+  box-shadow: inset 0 6px 0 rgba(180, 140, 255, 0.28);
+}
+@keyframes voidPulse {
+  from { opacity: 0.55; }
+  to { opacity: 1; }
+}
+
+/* The dungeon's own screen: same stone-and-torch language. */
+#screen-dungeon {
+  background:
+    radial-gradient(24% 16% at 12% 3%, rgba(255, 168, 72, 0.2), transparent 70%),
+    radial-gradient(24% 16% at 88% 3%, rgba(255, 168, 72, 0.16), transparent 70%),
+    radial-gradient(circle at 50% 0%, #2a2233 0%, transparent 55%),
+    repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.035) 0 2px, transparent 2px 48px),
+    linear-gradient(#15111c, #08070c 70%);
+}
+
+/* Wider flight band so the six pigs have room to spread out. */
+#screen-title .title-heroes {
+  width: min(720px, 96vw);
+  height: clamp(132px, 33vw, 196px);
+}
+
+/* ------------------------------------------------------------
+   Menu sky: slow clouds + a title that pans
+   ------------------------------------------------------------ */
+#screen-title .sky-cloud {
+  position: absolute;
+  left: -32%;
+  width: var(--w, 120px);
+  height: 28px;
+  border-radius: 999px;
+  background: rgba(255, 238, 224, 0.22);
+  filter: blur(1.2px);
+  box-shadow: 0 0 46px rgba(255, 214, 176, 0.22);
+  animation-name: cloudDrift;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  will-change: transform;
+}
+
+#screen-title .sky-cloud::before,
+#screen-title .sky-cloud::after {
+  content: "";
+  position: absolute;
+  background: inherit;
+  border-radius: 999px;
+}
+
+#screen-title .sky-cloud::before { width: 58%; height: 172%; left: 12%; top: -80%; }
+#screen-title .sky-cloud::after { width: 42%; height: 138%; right: 12%; top: -52%; }
+
+@keyframes cloudDrift {
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(166vw, 0, 0); }
+}
+
+/* The title pans back and forth, slowly, over the drifting sky. */
+#screen-title .logo { animation: logoDrift 18s ease-in-out infinite alternate; }
+
+@keyframes logoDrift {
+  from { transform: translateX(-15px) rotate(-2.6deg); }
+  to { transform: translateX(15px) rotate(-0.5deg) translateY(-6px); }
+}
+
+/* ------------------------------------------------------------
+   Tab rails: every tab has to be reachable, on any screen
+   Ten base tabs in a nowrap rail pushed seven of them off a phone.
+   ------------------------------------------------------------ */
+#screen-base .base-tabs {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 6px;
+  overflow-x: visible;
+}
+
+#screen-base .base-tabs .tab {
+  flex: none;
+  min-width: 0;
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+#screen-map .world-tabs { flex-wrap: wrap; row-gap: 6px; }
+
+@media (max-width: 560px) {
+  #screen-base .base-tabs { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  #screen-base .base-tabs .tab { font-size: 0.7rem; padding: 6px 8px; }
+  #screen-map .world-tabs .world-tab { font-size: 0.68rem; padding: 6px 8px; }
+}
+
+/* ------------------------------------------------------------
+   Battle bar: two attacks + one team-help, pepper on its own row
+   ------------------------------------------------------------ */
+.ability.help { background: linear-gradient(#ddf3c9, #a9d488); }
+.ability.help .ab-desc { color: #37531e; }
+
+.ability.pepper-big {
+  flex: 1 1 100%;
+  min-width: 0;
+  min-height: 58px;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background: linear-gradient(#ffb56f, #e8632a);
+  box-shadow: 0 5px 0 #93350f, 0 12px 22px rgba(0, 0, 0, 0.35);
+}
+
+.ability.pepper-big .ab-top { justify-content: center; gap: 8px; }
+.ability.pepper-big .ab-ico { font-size: 1.3rem; }
+.ability.pepper-big .ab-name { font-size: 0.98rem; letter-spacing: 0.02em; }
+.ability.pepper-big .cost { margin-left: 0; }
+
+.ability.pepper-big .pepper-tag {
+  font-size: 0.6rem;
+  font-weight: 900;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #7a2c05;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 999px;
+  padding: 2px 8px;
+}
+
+.ability.pepper-big .pepper-count {
+  font-size: 0.66rem;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  color: #5d2208;
+  background: rgba(255, 255, 255, 0.45);
+  border-radius: 999px;
+  padding: 2px 9px;
+}
+
+.ability.pepper-big .ab-desc {
+  text-align: center;
+  white-space: normal;
+  font-size: 0.66rem;
+  color: #5d2208;
+}
+
+.ability.pepper-big.spent {
+  background: linear-gradient(#6b5a4a, #463a2f);
+  box-shadow: 0 5px 0 #2c221b, 0 8px 16px rgba(0, 0, 0, 0.3);
+}
+.ability.pepper-big.spent .ab-name,
+.ability.pepper-big.spent .ab-desc,
+.ability.pepper-big.spent .pepper-count { color: #efe3d2; }
+.ability.pepper-big.spent .pepper-tag { color: #f4e6d5; background: rgba(0, 0, 0, 0.3); }
+
+@media (max-width: 560px) {
+  .ability.pepper-big { min-height: 50px; }
+  .ability.pepper-big .ab-desc { display: none; }
+  .ability.pepper-big .ab-name { font-size: 0.86rem; }
+}
+
+/* ------------------------------------------------------------
+   Battle HUD: the action bar owns the full width of the stage
+   It used to start after the pig portrait, which pushed the whole
+   row — and the pepper under it — right of centre.
+   ------------------------------------------------------------ */
+#screen-battle .hud {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: end;
+  column-gap: 10px;
+  row-gap: 6px;
+}
+
+#screen-battle .hud-hero {
+  grid-column: 1 / -1;
+  grid-row: 1;
+  justify-self: center;
+}
+
+#screen-battle .hud-actions {
+  grid-column: 1 / -1;
+  grid-row: 2;
+  width: 100%;
+}
+
+/* ------------------------------------------------------------
+   Level preview: power readout, squad picker, Backup Bell
+   ------------------------------------------------------------ */
+.pv-power {
+  display: grid;
+  gap: 7px;
+  margin: 10px 0 12px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-left: 3px solid var(--pw-color, #ffcf5c);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(0, 0, 0, 0.16));
+}
+
+.pvp-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.pvp-side {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.pvp-side.right {
+  align-items: flex-end;
+  text-align: right;
+}
+
+.pvp-side small {
+  font-size: 10.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  opacity: 0.6;
+}
+
+.pvp-side b {
+  font-size: 21px;
+  line-height: 1.05;
+  font-variant-numeric: tabular-nums;
+  color: var(--pw-color, #ffcf5c);
+}
+
+.pvp-mid {
+  font-size: 10.5px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  opacity: 0.5;
+}
+
+.pvp-bar {
+  height: 8px;
+  border-radius: 99px;
+  background: rgba(255, 255, 255, 0.12);
+  overflow: hidden;
+}
+
+.pvp-bar span {
+  display: block;
+  height: 100%;
+  border-radius: 99px;
+  background: var(--pw-color, #ffcf5c);
+  transition: width 0.25s ease;
+}
+
+.pvp-verdict {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  flex-wrap: wrap;
+  font-size: 12px;
+}
+
+.pvp-verdict b {
+  font-size: 11.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--pw-color, #ffcf5c);
+}
+
+.pvp-verdict span {
+  opacity: 0.75;
+}
+
+.pvp-tier {
+  align-self: center;
+  padding: 1px 5px;
+  border: 1px solid currentColor;
+  border-radius: 99px;
+  color: var(--pw-color, #ffcf5c);
+  font-size: 8.5px;
+  font-weight: 800;
+  line-height: 1.3;
+  letter-spacing: 0.06em;
+  opacity: 1 !important;
+}
+
+.pvp-stars {
+  display: inline-flex;
+  gap: 1px;
+  align-self: center;
+  color: var(--pw-color, #ffcf5c);
+  font-size: 13px;
+  line-height: 1;
+  letter-spacing: 0;
+  opacity: 1 !important;
+}
+
+.pvp-stars i {
+  font-style: normal;
+  opacity: 0.28;
+}
+
+.pvp-stars i.on {
+  opacity: 1;
+  text-shadow: 0 0 7px currentColor;
+}
+
+.pvp-formula {
+  font-size: 10.5px;
+  line-height: 1.45;
+  opacity: 0.5;
+}
+
+.pv-pw {
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  opacity: 0.6;
+}
+
+.sq-wrap {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.sq-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  flex-wrap: wrap;
+  font-size: 12px;
+}
+
+.sq-head b {
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  opacity: 0.85;
+}
+
+.sq-head span {
+  font-size: 11px;
+  opacity: 0.55;
+}
+
+.sq-row,
+.sq-bench {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.sq-slot {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  width: 86px;
+  padding: 8px 4px 6px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.05);
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  transition: transform 0.12s ease, border-color 0.12s ease, background 0.12s ease;
+}
+
+.sq-slot svg {
+  width: 34px;
+  height: 34px;
+}
+
+.sq-slot b {
+  font-size: 11px;
+}
+
+.sq-slot small {
+  font-size: 10px;
+  opacity: 0.62;
+  font-variant-numeric: tabular-nums;
+}
+
+.sq-slot.on {
+  border-color: rgba(243, 201, 105, 0.6);
+  background: rgba(243, 201, 105, 0.12);
+}
+
+.sq-slot.bench {
+  opacity: 0.78;
+}
+
+.sq-slot.bench:hover:not(:disabled) {
+  opacity: 1;
+  border-color: rgba(255, 255, 255, 0.35);
+  transform: translateY(-1px);
+}
+
+.sq-slot:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.sq-x {
+  position: absolute;
+  top: 3px;
+  right: 6px;
+  font-size: 10px;
+  opacity: 0.55;
+}
+
+.sq-empty {
+  display: grid;
+  place-items: center;
+  width: 86px;
+  border-radius: 12px;
+  border: 1px dashed rgba(255, 255, 255, 0.22);
+  font-size: 10.5px;
+  opacity: 0.5;
+}
+
+.sq-bell {
+  font-size: 11.5px;
+  padding: 7px 10px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.sq-bell.on {
+  border-color: rgba(243, 201, 105, 0.6);
+  color: #f3c969;
+}
+
+.sq-bell.off {
+  opacity: 0.5;
+}
+
+.sq-bell-btn {
+  justify-self: start;
+  font: inherit;
+  font-size: 11.5px;
+  padding: 8px 11px;
+  border-radius: 10px;
+  border: 1px solid rgba(243, 201, 105, 0.55);
+  background: rgba(243, 201, 105, 0.12);
+  color: #f3c969;
+  cursor: pointer;
+}
+
+.sq-bell-btn:hover {
+  background: rgba(243, 201, 105, 0.22);
+}
+/* The menu now carries a dossier and quick tiles: allow scrolling, but only
+   center with auto margins so a short window can still reach the top. */
+#screen-title { overflow-y: auto; align-items: flex-start; }
+#screen-title .title-inner { margin: auto; }
+
+/* Title: progress dossier, quick-award tiles and the next-award line. */
+.title-dossier { display: flex; flex-wrap: wrap; justify-content: center; gap: 7px; margin-top: 2px; }
+.title-dossier span {
+  padding: 4px 11px; border-radius: 999px;
+  background: rgba(10, 20, 12, 0.5);
+  border: 1px solid rgba(255, 226, 160, 0.24);
+  color: #f3e8cc; font-size: 11.5px; letter-spacing: 0.03em;
+}
+.title-dossier b { color: #ffe08a; }
+.title-quick {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(128px, 1fr));
+  gap: 8px; width: min(540px, 92vw); margin-top: 10px;
+}
+.tq {
+  display: grid; justify-items: center; gap: 2px; padding: 9px 8px;
+  border-radius: 12px; cursor: pointer;
+  background: rgba(16, 12, 30, 0.55);
+  border: 1px solid rgba(255, 214, 140, 0.24);
+  color: #ffe9c8; font-family: inherit;
+  transition: border-color 0.15s, background 0.15s, box-shadow 0.15s;
+}
+.tq:hover { border-color: rgba(255, 214, 140, 0.6); background: rgba(30, 22, 50, 0.72); }
+.tq.ready { border-color: #ffd166; box-shadow: 0 0 14px rgba(255, 180, 60, 0.35); }
+.tq-ico { font-size: 17px; line-height: 1; }
+.tq b { font-size: 12px; }
+.tq small { font-size: 9.5px; color: #cbbf9f; }
+.title-next { max-width: 520px; margin-top: 2px; font-size: 10.5px; line-height: 1.45; color: #c9dcb4; opacity: 0.82; }
+.title-next b { color: #ffe6a8; }
+@media (max-width: 520px) {
+  .title-quick { grid-template-columns: 1fr; width: min(340px, 92vw); }
+  .title-dossier span { font-size: 10.5px; padding: 3px 9px; }
+}
+
+/* Title: a real one-line description under the logo. */
+.title-desc {
+  max-width: 520px;
+  margin: 10px auto 0;
+  padding: 0 18px;
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: #f4e8d2;
+  text-align: center;
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.55);
+}
+
+/* Inventory keys: three tiers, three colours, on the light inventory panel. */
+.inv-keys { display: grid; gap: 7px; margin-bottom: 4px; }
+.key-card {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 10px; border-radius: 11px;
+  color: #2c2410;
+  background: linear-gradient(#fff9ea, #ecdfc0);
+  border: 1px solid rgba(90, 66, 24, 0.25);
+  opacity: 0.72;
+}
+.key-card.owned { opacity: 1; box-shadow: inset 0 0 0 2px var(--key, #c9a86a); }
+.key-ico { font-size: 20px; width: 26px; text-align: center; line-height: 1; filter: grayscale(1); opacity: 0.55; }
+.key-card.owned .key-ico { filter: none; opacity: 1; }
+.key-body { flex: 1; min-width: 0; }
+.key-body b { display: block; font-size: 13px; }
+.key-body small { display: block; font-size: 10.5px; line-height: 1.35; color: #6a5c38; }
+.key-tag { font-size: 9px; text-transform: uppercase; letter-spacing: 0.06em; color: #6a5c38; }
+.key-card.owned .key-tag { color: #8a5f10; font-weight: 700; }
+
+/* Locked pigs are mysteries in camp, exactly as they are in the index. */
+.hero-card.locked .mystery { width: 54px; height: 54px; font-size: 1.6rem; }

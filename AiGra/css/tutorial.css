@@ -1,0 +1,118 @@
+/* ============================================================
+   Guided tour: dark panels with a hole around the thing to tap,
+   a pulsing ring around it and an arrow into the bubble.
+   ============================================================ */
+
+.tour-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 9000;
+  pointer-events: none;
+  font-family: inherit;
+}
+
+.tour-block {
+  position: absolute;
+  background: rgba(6, 12, 6, 0.72);
+  pointer-events: auto;
+  transition: background 0.2s ease;
+}
+
+/* Info steps pass clicks through, so a lesson about the battle does not stop
+   the battle. Forced steps keep the dark panels clickable. */
+.tour-block.pass {
+  pointer-events: none;
+  background: rgba(6, 12, 6, 0.42);
+}
+
+.tour-ring {
+  position: absolute;
+  border-radius: 16px;
+  border: 3px solid #ffd85e;
+  box-shadow: 0 0 0 3px rgba(255, 216, 94, 0.25), 0 0 26px rgba(255, 200, 70, 0.65);
+  pointer-events: none;
+  animation: tourPulse 1.5s ease-in-out infinite;
+}
+
+@keyframes tourPulse {
+  50% { border-color: #fff3b0; box-shadow: 0 0 0 6px rgba(255, 216, 94, 0.16), 0 0 34px rgba(255, 200, 70, 0.85); }
+}
+
+.tour-arrow {
+  position: absolute;
+  font-size: 26px;
+  line-height: 1;
+  transform: translateX(-50%);
+  pointer-events: none;
+  filter: drop-shadow(0 3px 4px rgba(0, 0, 0, 0.55));
+  animation: tourBob 1.1s ease-in-out infinite;
+}
+
+@keyframes tourBob {
+  50% { transform: translateX(-50%) translateY(4px); }
+}
+
+.tour-bubble {
+  position: absolute;
+  width: min(340px, calc(100vw - 24px));
+  padding: 14px 16px 12px;
+  border-radius: 18px;
+  color: #f6ffe9;
+  background: linear-gradient(#24361f, #131f10);
+  border: 2px solid rgba(255, 216, 94, 0.5);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.55), inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+  pointer-events: auto;
+}
+
+.tour-kicker {
+  font-size: 0.6rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #ffd85e;
+  font-weight: 800;
+}
+
+.tour-title {
+  margin: 2px 0 6px;
+  font-size: 1.06rem;
+  color: #fff6d4;
+}
+
+.tour-text {
+  margin: 0 0 10px;
+  font-size: 0.82rem;
+  line-height: 1.42;
+  color: #e2f0d2;
+}
+
+.tour-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.tour-actions .tour-next {
+  flex: 1 1 auto;
+  min-height: 38px;
+  font-size: 0.86rem;
+}
+
+.tour-skip {
+  border: 0;
+  background: none;
+  color: #a9c98d;
+  font-family: inherit;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-decoration: underline;
+  cursor: pointer;
+  padding: 6px 2px;
+  flex: 0 0 auto;
+}
+
+.tour-skip:hover { color: #e2f0d2; }
+
+@media (max-width: 520px) {
+  .tour-text { font-size: 0.78rem; }
+  .tour-title { font-size: 0.98rem; }
+}
